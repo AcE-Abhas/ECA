@@ -1,0 +1,82 @@
+{
+  "version": 3,
+  "compilationGroups": [
+    {
+      "language": "Verilog/SystemVerilog",
+      "library": "work",
+      "resources": [
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\ALU.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Control_unit.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Data_memory.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\addArch.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\core.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\extend.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\register_file.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\test\\source\\ram.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\test\\source\\rom.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\test\\testbench.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        }
+      ],
+      "overrideDirectives": {},
+      "undefineMacroNames": [],
+      "includePaths": [],
+      "includeFallbackToLocalDirectory": false,
+      "additionalEnvironmentVariables": {},
+      "libraryResourcesConfig": {
+        "libraryFolderMatchConfigs": [],
+        "searchStrategy": "DEFAULT"
+      },
+      "currentWorkingDirectory": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip",
+      "inferOrder": true,
+      "inferLibrary": false,
+      "allowUndefineInitialDefine": false,
+      "allowUndefineAllInitialDefine": false,
+      "conditionalVariables": {},
+      "target": {
+        "project": "student_zip",
+        "version": "default",
+        "target": "rtl"
+      },
+      "shouldBeValidated": true
+    }
+  ]
+}
