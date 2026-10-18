@@ -64,9 +64,7 @@ module CustomCore#(
     // ---------------------------------------------------------------
     assign PCPlus4  = PC + 4;
     assign PCTarget = PC + ImmExt;
-    assign PCNext   = (PCSrc == 1'b0) ? PCTarget :
-                      (PCSrc == 1'b1) ? {ALUResult[(REGISTER_WIDTH - 1):1], 1'b0} :   // jalr
-                                         PCPlus4;
+    assign PCNext = PCSrc ? PCTarget : PCPlus4;
 
     always @(posedge clk) begin
         if (reset) begin
@@ -144,20 +142,10 @@ module CustomCore#(
     // ---------------------------------------------------------------
     // Data memory (the RAM in the test bench: A, WD, WE, RD)
     // ---------------------------------------------------------------
-    Data_memory#(
-        .REGISTER_WIDTH(REGISTER_WIDTH),
-        .DATA_MEMORY_ADDRESS_WIDTH(DATA_MEMORY_ADDRESS_WIDTH)
-    ) Data_mem(
-        .clk(clk),
-        .WE(MemWrite),
-        .A(ALUResult),
-        .WD(RD2),
-        .data_memory_read(data_memory_read),
-        .RD(ReadData),
-        .data_memory_address(data_memory_address),
-        .data_write_value(data_write_value),
-        .data_write_enable(data_write_enable)
-    );
+    assign data_memory_address = ALUResult[(DATA_MEMORY_ADDRESS_WIDTH + 1):2];   // A  (byte -> word address)
+    assign data_write_value    = RD2;                                           // WD
+    assign data_write_enable   = MemWrite;                                      // WE
+    assign ReadData            = data_memory_read;                              // RD
 
     // ---------------------------------------------------------------
     // Write back

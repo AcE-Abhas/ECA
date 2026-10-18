@@ -13,12 +13,13 @@ module control_unit(
     output reg       ALUSrc, //done
     output reg [1:0] ImmSrc, //done
     output reg       RegWrite,
-    output wire       Finish
+    output reg       Finish
 );
     reg [1:0] ALUOp; //done
     reg Branch;
+    reg ZeroRes;
 
-    assign PCSrc = Branch && Zero;
+    assign PCSrc = Branch && ZeroRes;
 
     always @* begin
         case (op)
@@ -30,6 +31,7 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b0;
                 Branch = 1'b0;
+                Finish = 1'b0;
             end
             7'b0010011: begin //I-Type (addi, slli)
                 ALUOp = 2'b11;          // funct3 decides
@@ -39,6 +41,7 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b0;
                 Branch = 1'b0;
+                Finish = 1'b0;
             end
             7'b0000011: begin //I-Type (lw)
                 ALUOp = 2'b00;
@@ -48,6 +51,7 @@ module control_unit(
                 ResultSrc = 1'b1;
                 MemWrite = 1'b0;
                 Branch = 1'b0;
+                Finish = 1'b0;
             end
             7'b1100111: begin //I-Type (jalr, used by ret)
                 ALUOp = 2'b00;
@@ -57,6 +61,7 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b0;
                 Branch = 1'b0;
+                Finish = 1'b1;
             end
             7'b0100011: begin //S-Type (sw)
                 ALUOp = 2'b00;
@@ -66,6 +71,7 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b1;
                 Branch = 1'b0;
+                Finish = 1'b0;
             end
             7'b1100011: begin //B-Type (beq, bne, blt, bge)
                 ALUOp = 2'b01;          // subtract
@@ -75,6 +81,7 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b0;
                 Branch = 1'b1;
+                Finish = 1'b0;
             end
             7'b1101111: begin //J-Type (jal)
                 ALUOp = 2'b00;
@@ -84,6 +91,7 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b0;
                 Branch = 1'b0;
+                Finish = 1'b0;
             end
             default: begin
                 ALUOp = 2'b00;
@@ -93,10 +101,11 @@ module control_unit(
                 ResultSrc = 1'b0;
                 MemWrite = 1'b0;
                 Branch = 1'b0;
+                Finish = 1'b0;
             end
         endcase
 
-        
+        ZeroRes = 1'b0;
 
         case (ALUOp)
             2'b10: begin //R-Type (add, mul)
@@ -132,18 +141,23 @@ module control_unit(
                 case (funct3)
                     3'b000: begin //BEQ
                         ALUControl = 3'b001;
+                        ZeroRes = Zero;
                     end
                     3'b001: begin //BNE
                         ALUControl = 3'b001;
+                        ZeroRes = !Zero;
                     end
                     3'b100: begin //BLT
                         ALUControl = 3'b100;
+                        ZeroRes = !Zero;
                     end 
                     3'b101: begin //BGE
                         ALUControl = 3'b100;
+                        ZeroRes = Zero;
                     end 
                     default: begin 
                         ALUControl = 3'b000;
+                        ZeroRes = Zero;
                     end
                 endcase
             end

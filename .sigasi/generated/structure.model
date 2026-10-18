@@ -13,8 +13,6 @@
         "resources": [
           "platform:/resource/student_zip/Targets/rtl/work/ALU.v",
           "platform:/resource/student_zip/Targets/rtl/work/Control_unit.v",
-          "platform:/resource/student_zip/Targets/rtl/work/Data_memory.v",
-          "platform:/resource/student_zip/Targets/rtl/work/addArch.v",
           "platform:/resource/student_zip/Targets/rtl/work/core.v",
           "platform:/resource/student_zip/Targets/rtl/work/extend.v",
           "platform:/resource/student_zip/Targets/rtl/work/register_file.v",
@@ -59,30 +57,6 @@
         }
       },
       "platform:/resource/student_zip/Targets/rtl/work/Control_unit.v": {
-        "root": {
-          "project": "student_zip",
-          "version": "default",
-          "target": "rtl"
-        },
-        "actual": {
-          "project": "student_zip",
-          "version": "default",
-          "target": "rtl"
-        }
-      },
-      "platform:/resource/student_zip/Targets/rtl/work/Data_memory.v": {
-        "root": {
-          "project": "student_zip",
-          "version": "default",
-          "target": "rtl"
-        },
-        "actual": {
-          "project": "student_zip",
-          "version": "default",
-          "target": "rtl"
-        }
-      },
-      "platform:/resource/student_zip/Targets/rtl/work/addArch.v": {
         "root": {
           "project": "student_zip",
           "version": "default",
@@ -205,16 +179,6 @@
       "type": 1
     },
     {
-      "source": "platform:/resource/student_zip/Targets/rtl/work/Data_memory.v",
-      "target": "file:///c:/Users/teunv/Documents/School/Master/ECA/student_zip/source/Data_memory.v",
-      "type": 1
-    },
-    {
-      "source": "platform:/resource/student_zip/Targets/rtl/work/addArch.v",
-      "target": "file:///c:/Users/teunv/Documents/School/Master/ECA/student_zip/source/addArch.v",
-      "type": 1
-    },
-    {
       "source": "platform:/resource/student_zip/Targets/rtl/work/core.v",
       "target": "file:///c:/Users/teunv/Documents/School/Master/ECA/student_zip/source/core.v",
       "type": 1
@@ -262,16 +226,6 @@
       "isLibraryFile": false
     },
     "platform:/resource/student_zip/Targets/rtl/work/Control_unit.v": {
-      "library": null,
-      "version": "Verilog",
-      "isLibraryFile": false
-    },
-    "platform:/resource/student_zip/Targets/rtl/work/Data_memory.v": {
-      "library": null,
-      "version": "Verilog",
-      "isLibraryFile": false
-    },
-    "platform:/resource/student_zip/Targets/rtl/work/addArch.v": {
       "library": null,
       "version": "Verilog",
       "isLibraryFile": false
@@ -356,16 +310,6 @@
       {
         "source": "platform:/resource/student_zip/Targets/rtl/work/Control_unit.v",
         "target": "file:///c:/Users/teunv/Documents/School/Master/ECA/student_zip/source/Control_unit.v",
-        "type": 1
-      },
-      {
-        "source": "platform:/resource/student_zip/Targets/rtl/work/Data_memory.v",
-        "target": "file:///c:/Users/teunv/Documents/School/Master/ECA/student_zip/source/Data_memory.v",
-        "type": 1
-      },
-      {
-        "source": "platform:/resource/student_zip/Targets/rtl/work/addArch.v",
-        "target": "file:///c:/Users/teunv/Documents/School/Master/ECA/student_zip/source/addArch.v",
         "type": 1
       },
       {

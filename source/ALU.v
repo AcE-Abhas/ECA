@@ -14,7 +14,7 @@ module alu#(
     input  wire [(REGISTER_WIDTH - 1):0] SrcB,
     input  wire [2:0]                    ALUControl,
     output reg  [(REGISTER_WIDTH - 1):0] ALUResult,
-    output wire                          Zero
+    output reg                          Zero
 );
 
     always @* begin
@@ -26,8 +26,12 @@ module alu#(
             3'b100:  ALUResult = {{(REGISTER_WIDTH - 1){1'b0}}, ($signed(SrcA) < $signed(SrcB))};   // slt: 1 if SrcA < SrcB (signed), else 0
             default: ALUResult = {REGISTER_WIDTH{1'b0}};
         endcase
-    end
 
-    assign Zero = (ALUResult == {REGISTER_WIDTH{1'b0}});
+        if (ALUResult == {REGISTER_WIDTH{1'b0}}) begin
+            Zero = 1;
+        end else begin
+            Zero = 0;
+        end
+    end
 
 endmodule

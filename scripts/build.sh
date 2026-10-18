@@ -9,7 +9,6 @@ CORE_FILES=(
     source/core.v
     source/ALU.v
     source/Control_unit.v
-    source/Data_memory.v
     source/extend.v
     source/register_file.v
 )

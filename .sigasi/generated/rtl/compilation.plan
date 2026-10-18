@@ -16,16 +16,6 @@
           "kind": "COMPILE_FILE"
         },
         {
-          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Data_memory.v",
-          "hdlVersion": "Verilog",
-          "kind": "COMPILE_FILE"
-        },
-        {
-          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\addArch.v",
-          "hdlVersion": "Verilog",
-          "kind": "COMPILE_FILE"
-        },
-        {
           "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\core.v",
           "hdlVersion": "Verilog",
           "kind": "COMPILE_FILE"
