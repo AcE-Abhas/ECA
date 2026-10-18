@@ -1,13 +1,11 @@
 `timescale 1ps/1ps
 
 module CustomCore#(
-    // --- SET BY THE TEST BENCH. DO NOT CHANGE ---
     parameter REGISTER_WIDTH = 32,
-    parameter REGISTER_ADDRESS_WIDTH = 5,   // passed by the provided test bench. Keep this (misspelled) name, the test bench uses it. Unused.
+    parameter REGISTER_ADDRESS_WIDTH = 5,
     parameter INSTRUCTION_MEMORY_ADDRESS_WIDTH = 5,
     parameter DATA_MEMORY_ADDRESS_WIDTH = 5
 ) (
-    // --- TEST BENCH PORTS. DO NOT CHANGE ---
     input wire                                            clock,
     input wire                                            reset,
 

@@ -6,7 +6,6 @@
 //               010 = mul     (low 32 bits of the product)
 //               011 = sll     (shift SrcA left by SrcB[4:0], for slli)
 //               100 = blt/bge (signed comparison)
-// LT is the signed comparison SrcA < SrcB, independent of ALUControl (for blt / bge).
 module alu#(
     parameter REGISTER_WIDTH = 32
 ) (

@@ -24,7 +24,7 @@ module control_unit(
     always @* begin
         case (op)
             7'b0110011: begin //R-Type (add, mul)
-                ALUOp = 2'b10;          // funct decides
+                ALUOp = 2'b10;          // funct7 decides
                 ImmSrc = 2'b00;
                 ALUSrc = 1'b0;
                 RegWrite = 1'b1;
@@ -74,7 +74,7 @@ module control_unit(
                 Finish = 1'b0;
             end
             7'b1100011: begin //B-Type (beq, bne, blt, bge)
-                ALUOp = 2'b01;          // subtract
+                ALUOp = 2'b01;          // Funct3 decides
                 ImmSrc = 2'b10;
                 ALUSrc = 1'b0;
                 RegWrite = 1'b0;
