@@ -26,7 +26,7 @@ module CustomCore#(
     // Control signals (from the control unit)
     // ---------------------------------------------------------------
     wire       PCSrc;
-    wire       ResultSrc;
+    wire [1:0] ResultSrc;
     wire       MemWrite;
     wire [2:0] ALUControl;
     wire       ALUSrc;
@@ -45,7 +45,7 @@ module CustomCore#(
     wire [(REGISTER_WIDTH - 1):0] ALUResult;
     wire                          Zero;
     wire [(REGISTER_WIDTH - 1):0] ReadData;
-    wire [(REGISTER_WIDTH - 1):0] Result;
+    reg [(REGISTER_WIDTH - 1):0] Result;
 
     // ---------------------------------------------------------------
     // lw takes two cycles: the RAM answers one clk after the address.
@@ -148,8 +148,22 @@ module CustomCore#(
     // ---------------------------------------------------------------
     // Write back
     // ---------------------------------------------------------------
-    assign Result = ResultSrc ? ReadData : ALUResult;
-
     assign core_finish_signal = finish_r;
+    always @* begin
+        case (ResultSrc)
+            2'b00: begin
+                Result = ALUResult;
+            end
+            2'b01: begin
+                Result = ReadData;
+            end
+            2'b10: begin
+                Result = PCPlus4;
+            end
+            default: begin
+                Result = ALUResult;
+            end
+        endcase
+    end
 
 endmodule
