@@ -11,6 +11,11 @@ CORE_FILES=(
     source/Control_unit.v
     source/extend.v
     source/register_file.v
+    source/Decode_unit.v
+    source/Execute_unit.v
+    source/Fetch_unit.v
+    source/Hazard_unit.v
+    source/Memory_unit.v
 )
 
 # Testbench infrastructure (RAM, ROM) and the convolution testbench
