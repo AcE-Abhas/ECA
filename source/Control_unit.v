@@ -4,23 +4,22 @@ module control_unit(
     input  wire [6:0] op,
     input  wire [2:0] funct3,
     input  wire [6:0] funct7,
-    input  wire       Zero,
 
-    output wire      PCSrc, //done
+    output reg       RegWrite,
     output reg [1:0] ResultSrc, //done
     output reg       MemWrite, //done
+    output reg       Jump,
+    output reg       Branch,
     output reg [2:0] ALUControl, //done
     output reg       ALUSrc, //done
     output reg [1:0] ImmSrc, //done
-    output reg       RegWrite,
+    output reg       BranchInv,
+    
     output reg       Finish
 );
     reg [1:0] ALUOp; //done
-    reg Branch;
-    reg ZeroRes;
-    reg Jump;
 
-    assign PCSrc = Jump || (Branch && ZeroRes);
+    
 
     always @* begin
         case (op)
@@ -66,7 +65,7 @@ module control_unit(
                 MemWrite = 1'b0;
                 Branch = 1'b0;
                 Finish = 1'b1;
-                Jump = 1'b1;
+                Jump = 1'b0;
             end
             7'b0100011: begin //S-Type (sw)
                 ALUOp = 2'b00;
@@ -110,10 +109,11 @@ module control_unit(
                 MemWrite = 1'b0;
                 Branch = 1'b0;
                 Finish = 1'b0;
+                Jump = 1'b0;
             end
         endcase
 
-        ZeroRes = 1'b0;
+        BranchInv = 1'b0;
 
         case (ALUOp)
             2'b10: begin //R-Type (add, mul)
@@ -149,23 +149,23 @@ module control_unit(
                 case (funct3)
                     3'b000: begin //BEQ
                         ALUControl = 3'b001;
-                        ZeroRes = Zero;
+                        BranchInv = 1'b0;
                     end
                     3'b001: begin //BNE
                         ALUControl = 3'b001;
-                        ZeroRes = !Zero;
+                        BranchInv = 1'b1;
                     end
                     3'b100: begin //BLT
                         ALUControl = 3'b100;
-                        ZeroRes = !Zero;
+                        BranchInv = 1'b1;
                     end 
                     3'b101: begin //BGE
                         ALUControl = 3'b100;
-                        ZeroRes = Zero;
+                        BranchInv = 1'b0;
                     end 
                     default: begin 
                         ALUControl = 3'b000;
-                        ZeroRes = Zero;
+                        BranchInv = 1'b0;
                     end
                 endcase
             end

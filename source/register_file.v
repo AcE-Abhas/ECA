@@ -31,7 +31,7 @@ module register_file#(
         end
     end
 
-    assign RD1 = (A1 == 5'd0) ? {REGISTER_WIDTH{1'b0}} : registers[A1];
-    assign RD2 = (A2 == 5'd0) ? {REGISTER_WIDTH{1'b0}} : registers[A2];
+    assign RD1 = (A1 == 5'd0) ? 0 : (WE3 && A3 == A1) ? WD3 : registers[A1];
+    assign RD2 = (A2 == 5'd0) ? 0 : (WE3 && A3 == A2) ? WD3 : registers[A2];
 
 endmodule

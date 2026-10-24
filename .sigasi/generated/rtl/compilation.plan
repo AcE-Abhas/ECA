@@ -16,6 +16,31 @@
           "kind": "COMPILE_FILE"
         },
         {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Decode_unit.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Execute_unit.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Fetch_unit.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Hazard_unit.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
+          "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\Memory_unit.v",
+          "hdlVersion": "Verilog",
+          "kind": "COMPILE_FILE"
+        },
+        {
           "path": "c:\\Users\\teunv\\Documents\\School\\Master\\ECA\\student_zip\\source\\core.v",
           "hdlVersion": "Verilog",
           "kind": "COMPILE_FILE"
