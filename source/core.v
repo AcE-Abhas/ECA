@@ -1,13 +1,23 @@
 `timescale 1ps/1ps
+
+// ---------------------------------------------------------------
+// Pipeline processor created by:
+// TJR van den Elzen
+// Design is based on lecture 4: "Session 4: Microarchitecture" from ECA
+// Progress (very badly :) managed in github) because I always forget git commit during working.
+// ---------------------------------------------------------------
 module CustomCore#(
+    //Based on testbench handover.
     parameter REGISTER_WIDTH = 32,
     parameter REGISTER_ADDRESS_WIDTH = 5,
     parameter INSTRUCTION_MEMORY_ADDRESS_WIDTH = 5,
     parameter DATA_MEMORY_ADDRESS_WIDTH = 5
 ) (
+    //TB top level inputs:
     input wire                                            clock,
     input wire                                            reset,
 
+    //TB RAM and ROM interacting ports
     input wire[(REGISTER_WIDTH - 1): 0]                   instruction_memory_read,  // Read data from memory location indicated by instruction_memory_address
     input wire[(REGISTER_WIDTH - 1): 0]                   data_memory_read,         // Read back data from RAM
 
@@ -18,14 +28,19 @@ module CustomCore#(
     output wire                                           core_finish_signal          // 1 = job is done
 );
 
+    //This is used for my readability.
     wire clk;
     assign clk = clock;
+//***************************************************************
+// The following wires and registers and defined following their respective stage of slide 79 and 53.
+// Note that the hazard unit has seperate output ports as this is treated as a seperate stage.
+//***************************************************************
 
     // ---------------------------------------------------------------
     // Hazard unit outputs
     // ---------------------------------------------------------------
-    wire       StallF, StallD, FlushD, FlushE;
-    wire [1:0] ForwardAE, ForwardBE;
+    wire                          StallF, StallD, FlushD, FlushE;
+    wire [1:0]                    ForwardAE, ForwardBE;
 
     // ---------------------------------------------------------------
     // Fetch stage
@@ -39,9 +54,9 @@ module CustomCore#(
     wire [(REGISTER_WIDTH - 1):0] InstrD, PCD, PCPlus4D;
     wire [(REGISTER_WIDTH - 1):0] RD1D, RD2D;
     wire [31:0]                   ExtImmD;
-    wire       RegWriteD, MemWriteD, JumpD, BranchD, BranchInvD, ALUSrcD, FinishD;
-    wire [1:0] ResultSrcD, ImmSrcD;
-    wire [2:0] ALUControlD;
+    wire                          RegWriteD, MemWriteD, JumpD, BranchD, BranchInvD, ALUSrcD, FinishD;
+    wire [1:0]                    ResultSrcD, ImmSrcD;
+    wire [2:0]                    ALUControlD;
 
     // ---------------------------------------------------------------
     // Execute stage
@@ -49,44 +64,50 @@ module CustomCore#(
     wire [(REGISTER_WIDTH - 1):0] PCE, PCPlus4E, RD1E, RD2E;
     wire [31:0]                   ExtImmE;
     wire [4:0]                    Rs1E, Rs2E, RdE;
-    wire       RegWriteE, MemWriteE, JumpE, BranchE, BranchInvE, ALUSrcE, FinishE;
-    wire [1:0] ResultSrcE;
-    wire [2:0] ALUControlE;
+    wire                          RegWriteE, MemWriteE, JumpE, BranchE, BranchInvE, ALUSrcE, FinishE;
+    wire [1:0]                    ResultSrcE;
+    wire [2:0]                    ALUControlE;
     reg  [(REGISTER_WIDTH - 1):0] SrcAE, WriteDataE;
     wire [(REGISTER_WIDTH - 1):0] SrcBE, AluResultE, PCTargetE;
-    wire       ZeroE, PCSrcE;
+    wire                          ZeroE, PCSrcE;
 
     // ---------------------------------------------------------------
     // Memory stage
     // ---------------------------------------------------------------
     wire [(REGISTER_WIDTH - 1):0] PCPlus4M, AluResultM, WriteDataM, ReadDataM;
-    wire [4:0] RdM;
-    wire       RegWriteM, MemWriteM, FinishM;
-    wire [1:0] ResultSrcM;
+    wire [4:0]                    RdM;
+    wire                          RegWriteM, MemWriteM, FinishM;
+    wire [1:0]                    ResultSrcM;
 
     // ---------------------------------------------------------------
     // Write stage
     // ---------------------------------------------------------------
     wire [(REGISTER_WIDTH - 1):0] PCPlus4W, AluResultW, ReadDataW;
     reg  [(REGISTER_WIDTH - 1):0] ResultW;
-    wire [4:0] RdW;
-    wire       RegWriteW, FinishW;
-    wire [1:0] ResultSrcW;
+    wire [4:0]                    RdW;
+    wire                          RegWriteW, FinishW;
+    wire [1:0]                    ResultSrcW;
+
+//***************************************************************
+// Start of the code itself, beginning with the fetch stage
+//***************************************************************
 
     // ---------------------------------------------------------------
     // Program counter
     // ---------------------------------------------------------------
-    assign PCPlus4F = PC + 4;
-    assign PCNextF  = PCSrcE ? PCTargetE : PCPlus4F;
+    //ALU in fetch
+    assign PCPlus4F = PC + 4; 
+    //Mutex implementation
+    assign PCNextF  = PCSrcE ? PCTargetE : PCPlus4F; 
 
     always @(posedge clk) begin
         if (reset)
             PC <= {REGISTER_WIDTH{1'b0}};
-        else if (!StallF)
+        else if (!StallF) //Hazard unit control
             PC <= PCNextF;
     end
 
-    // Instruction memory (the ROM in the test bench is addressed per word)
+    // Instruction memory
     assign instruction_memory_address = PC[(INSTRUCTION_MEMORY_ADDRESS_WIDTH + 1):2];
 
     // ---------------------------------------------------------------
@@ -151,8 +172,8 @@ module CustomCore#(
         .FinishE(FinishE)
     );
 
-     // ---------------------------------------------------------------
-    // Register file and extend
+    // ---------------------------------------------------------------
+    // Register file and extend units
     // ---------------------------------------------------------------
     register_file #(
         .REGISTER_WIDTH(REGISTER_WIDTH)
@@ -220,6 +241,7 @@ module CustomCore#(
         .FinishM(FinishM)
     );
 
+    //Mutex implementations after the Execute unit.
     always @* begin
         case (ForwardAE)
             2'b01:   SrcAE = ResultW;
@@ -233,12 +255,14 @@ module CustomCore#(
         endcase
     end
 
+    //ALU below the ALU of the processor itself.
     assign PCTargetE = PCE + ExtImmE;
+
+    //Mutex to select register file or extender for second input.
+    assign SrcBE = ALUSrcE ? ExtImmE : WriteDataE;
     // ---------------------------------------------------------------
     // ALU
     // ---------------------------------------------------------------
-    assign SrcBE = ALUSrcE ? ExtImmE : WriteDataE;
-
     alu #(
         .REGISTER_WIDTH(REGISTER_WIDTH)
     ) aluBlock (
@@ -248,6 +272,7 @@ module CustomCore#(
         .ALUResult(AluResultE),
         .Zero(ZeroE)
     );
+
 
     assign PCSrcE    = JumpE | (BranchE & (ZeroE ^ BranchInvE));
     // ---------------------------------------------------------------
