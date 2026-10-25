@@ -16,21 +16,23 @@ for_i_loop:
     addi    s2,     x0,     0       # j = 0
 
 for_j_loop:
-    addi    s3,     x0,     0       # acc = 0
-    addi    s4,     x0,     0       # ki = 0
+    addi    s3, x0, 0
 
-for_ki_loop:
-    # Compute address of input[i+ki][j]
-    add     t0, s1, s4
+    # Calculate address of input[i][j] once
     addi    t3, x0, 13
-    mul     t2, t0, t3
+    mul     t2, s1, t3
     add     t2, t2, s2
     slli    t2, t2, 2
-    add     t3, a0, t2
+    add     t4, a0, t2
+
+    addi    s4, x0, 0       # ki = 0
+
+for_ki_loop:
+    
 
     # Load two adjacent input elements
-    lw      s6, 0(t3)
-    lw      s7, 4(t3)
+    lw      s6, 0(t4)
+    lw      s7, 4(t4)
 
     # Address of kernel[ki][0]
     slli    t0, s4, 3
@@ -45,6 +47,9 @@ for_ki_loop:
     lw      t0, 4(t1)
     mul     t2, s7, t0
     add     s3, s3, t2
+
+    # Advance to next input row
+    addi    t4, t4, 52
 
     # ki++; if ki < 2, repeat
     addi    s4, s4, 1
