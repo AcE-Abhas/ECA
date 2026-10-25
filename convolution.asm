@@ -10,6 +10,7 @@ convolution:
     addi    a1,     x0,     676     # kernel base byte address = 169*4
     addi    a2,     x0,     692     # output base byte address = 173*4
     addi    s1,     x0,     0       # i = 0
+    addi    a3,     x0,     692     # advance pointer
 
 for_i_loop:
     addi    s2,     x0,     0       # j = 0
@@ -50,15 +51,9 @@ for_ki_loop:
     addi    t0, x0, 2
     blt     s4, t0, for_ki_loop
 
-    # output byte offset = (i*11 + j)*4
-    addi    t0, x0, 11
-    mul     t1, s1, t0
-    add     t1, t1, s2
-    slli    t1, t1, 2
-
-    # Store output element
-    add     t2, a2, t1
-    sw      s3, 0(t2)
+    # Store output element and advance pointer
+    sw      s3, 0(a3)
+    addi    a3, a3, 4
 
     # j++; if j < 11 goto for_j_loop
     addi    s2, s2, 1
