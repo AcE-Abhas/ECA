@@ -1,0 +1,4 @@
+The shellscript build.sh in the zip file can be run with the cmd below in order to compile the source code: 
+```
+./build.sh
+```
