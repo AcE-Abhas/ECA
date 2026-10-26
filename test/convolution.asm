@@ -10,74 +10,66 @@ convolution:
     addi    a1,     x0,     676     # kernel base byte address = 169*4
     addi    a2,     x0,     692     # output base byte address = 173*4
     addi    s1,     x0,     0       # i = 0
+    addi    a3,     x0,     692     # advance pointer
 
 for_i_loop:
     addi    s2,     x0,     0       # j = 0
 
 for_j_loop:
-    addi    s3,     x0,     0       # acc = 0
-    addi    s4,     x0,     0       # ki = 0
+    addi    s3, x0, 0
+
+    # Calculate address of input[i][j] once
+    addi    t3, x0, 13
+    mul     t2, s1, t3
+    add     t2, t2, s2
+    slli    t2, t2, 2
+    add     t4, a0, t2
+
+    addi    s4, x0, 0       # ki = 0
 
 for_ki_loop:
-    addi    s5,     x0,     0       # kj = 0
+    
 
-for_kj_loop:
-    # input element: row = i+ki, col = j+kj
-    add     t0,     s1,     s4
-    add     t1,     s2,     s5
+    # Load two adjacent input elements
+    lw      s6, 0(t4)
+    lw      s7, 4(t4)
 
-    # byte offset = (row*13 + col) * 4
-    addi    t3,     x0,     13
-    mul     t2,     t0,     t3
-    add     t2,     t2,     t1
-    slli    t2,     t2,     2
+    # Address of kernel[ki][0]
+    slli    t0, s4, 3
+    add     t1, a1, t0
 
-    # load input element
-    add     t3,     a0,     t2
-    lw      s6,     0(t3)
+    # First column: input * kernel
+    lw      t0, 0(t1)
+    mul     t2, s6, t0
+    add     s3, s3, t2
 
-    # kernel byte offset = (ki*2 + kj) * 4
-    slli    t0,     s4,     1
-    add     t0,     t0,     s5
-    slli    t0,     t0,     2
+    # Second column: input * kernel
+    lw      t0, 4(t1)
+    mul     t2, s7, t0
+    add     s3, s3, t2
 
-    # load kernel element
-    add     t1,     a1,     t0
-    lw      s7,     0(t1)
+    # Advance to next input row
+    addi    t4, t4, 52
 
-    # acc += input * kernel
-    mul     t0,     s6,     s7
-    add     s3,     s3,     t0
+    # ki++; if ki < 2, repeat
+    addi    s4, s4, 1
+    addi    t0, x0, 2
+    blt     s4, t0, for_ki_loop
 
-    # kj++; if kj < 2 goto for_kj_loop
-    addi    s5,     s5,     1
-    addi    t0,     x0,     2
-    blt     s5,     t0,     for_kj_loop
-
-    # ki++; if ki < 2 goto for_ki_loop
-    addi    s4,     s4,     1
-    addi    t0,     x0,     2
-    blt     s4,     t0,     for_ki_loop
-
-    # output byte offset = (i*11 + j) * 4
-    addi    t0,     x0,     11
-    mul     t1,     s1,     t0
-    add     t1,     t1,     s2
-    slli    t1,     t1,     2
-
-    # store output element
-    add     t2,     a2,     t1
-    sw      s3,     0(t2)
+    # Store output element and advance pointer
+    sw      s3, 0(a3)
+    addi    a3, a3, 4
 
     # j++; if j < 11 goto for_j_loop
-    addi    s2,     s2,     1
-    addi    t0,     x0,     11
-    blt     s2,     t0,     for_j_loop
+    addi    s2, s2, 1
+    addi    t0, x0, 11
+    blt     s2, t0, for_j_loop
 
     # i++; if i < 11 goto for_i_loop
-    addi    s1,     s1,     1
-    addi    t0,     x0,     11
-    blt     s1,     t0,     for_i_loop
+    addi    s1, s1, 1
+    addi    t0, x0, 11
+    blt     s1, t0, for_i_loop
+
 
 # ret with ra=0 jumps to address 0, triggering core_finish
 ret
