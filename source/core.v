@@ -4,7 +4,6 @@
 // Pipeline processor created by:
 // TJR van den Elzen
 // Design is based on lecture 4: "Session 4: Microarchitecture" from ECA
-// Progress (very badly :) managed in github) because I always forget git commit during working.
 // ---------------------------------------------------------------
 module CustomCore#(
     //Based on testbench handover.
