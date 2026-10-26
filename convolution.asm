@@ -1,0 +1,75 @@
+# 2D convolution: 13x13 input (signed 32-bit) with 2x2 kernel -> 11x11 output
+#
+# Memory layout (word-addressed RAM, each word = 4 bytes):
+#   [0..168]   input matrix  (row-major, 13 cols)
+#   [169..172] kernel        (row-major: k[0][0] k[0][1] k[1][0] k[1][1])
+#   [173..293] output        (row-major, 11 cols)
+
+convolution:
+    addi    a0,     x0,     0       # input  base byte address = 0
+    addi    a1,     x0,     676     # kernel base byte address = 169*4
+    addi    a2,     x0,     692     # output base byte address = 173*4
+    addi    s1,     x0,     0       # i = 0
+    addi    a3,     x0,     692     # advance pointer
+
+for_i_loop:
+    addi    s2,     x0,     0       # j = 0
+
+for_j_loop:
+    addi    s3, x0, 0
+
+    # Calculate address of input[i][j] once
+    addi    t3, x0, 13
+    mul     t2, s1, t3
+    add     t2, t2, s2
+    slli    t2, t2, 2
+    add     t4, a0, t2
+
+    addi    s4, x0, 0       # ki = 0
+
+for_ki_loop:
+    
+
+    # Load two adjacent input elements
+    lw      s6, 0(t4)
+    lw      s7, 4(t4)
+
+    # Address of kernel[ki][0]
+    slli    t0, s4, 3
+    add     t1, a1, t0
+
+    # First column: input * kernel
+    lw      t0, 0(t1)
+    mul     t2, s6, t0
+    add     s3, s3, t2
+
+    # Second column: input * kernel
+    lw      t0, 4(t1)
+    mul     t2, s7, t0
+    add     s3, s3, t2
+
+    # Advance to next input row
+    addi    t4, t4, 52
+
+    # ki++; if ki < 2, repeat
+    addi    s4, s4, 1
+    addi    t0, x0, 2
+    blt     s4, t0, for_ki_loop
+
+    # Store output element and advance pointer
+    sw      s3, 0(a3)
+    addi    a3, a3, 4
+
+    # j++; if j < 11 goto for_j_loop
+    addi    s2, s2, 1
+    addi    t0, x0, 11
+    blt     s2, t0, for_j_loop
+
+    # i++; if i < 11 goto for_i_loop
+    addi    s1, s1, 1
+    addi    t0, x0, 11
+    blt     s1, t0, for_i_loop
+
+
+# ret with ra=0 jumps to address 0, triggering core_finish
+ret
