@@ -1,13 +1,7 @@
 `timescale 1ps/1ps
 
-// Extend (image: Instr[31:7], ImmSrc, ImmExt)
-// Picks the immediate out of the instruction and sign-extends it to 32 bits.
-//   ImmSrc 00 = I-type   (addi, slli, lw, jalr)
-//   ImmSrc 01 = S-type   (sw)
-//   ImmSrc 10 = B-type   (blt, ...)   lowest bit is always 0
-//   ImmSrc 11 = J-type   (jal)        lowest bit is always 0
 module extend(
-    input  wire [31:7] Instr,    // instruction bits 31..7, indices are the real bit numbers
+    input  wire [31:7] Instr,
     input  wire [1:0]  ImmSrc,
     output reg  [31:0] ImmExt
 );

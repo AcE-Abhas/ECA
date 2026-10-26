@@ -17,6 +17,7 @@ module alu#(
 );
 
     always @* begin
+        // Implement the ALU operation based on ALU control from control unit
         case (ALUControl)
             3'b000:  ALUResult = SrcA + SrcB;
             3'b001:  ALUResult = SrcA - SrcB;
@@ -26,6 +27,7 @@ module alu#(
             default: ALUResult = {REGISTER_WIDTH{1'b0}};
         endcase
 
+        // Set zero if output of ALU is zero
         if (ALUResult == {REGISTER_WIDTH{1'b0}}) begin
             Zero = 1;
         end else begin

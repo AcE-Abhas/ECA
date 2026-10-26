@@ -113,7 +113,7 @@ module control_unit(
             end
         endcase
 
-        BranchInv = 1'b0;
+        BranchInv = 1'b0; //Keep because otherwise latches become a problem
 
         case (ALUOp)
             2'b10: begin //R-Type (add, mul)

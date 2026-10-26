@@ -44,8 +44,6 @@ module Decode_unit#(
     output reg                          FinishE
 );
 
-    
-
     always @(posedge clk) begin
         ExtImmE         <= ExtImmD;     
         PCPlus4E        <= PCPlus4D;   

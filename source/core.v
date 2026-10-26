@@ -3,6 +3,8 @@
 // ---------------------------------------------------------------
 // Pipeline processor created by:
 // TJR van den Elzen
+// Optimizations done by:
+// Abhas Gahlot
 // Design is based on lecture 4: "Session 4: Microarchitecture" from ECA
 // ---------------------------------------------------------------
 module CustomCore#(
@@ -38,14 +40,16 @@ module CustomCore#(
     // ---------------------------------------------------------------
     // Hazard unit outputs
     // ---------------------------------------------------------------
-    wire                          StallF, StallD, FlushD, FlushE;
+    wire                          StallF, StallD;
+    wire                          FlushD, FlushE;
     wire [1:0]                    ForwardAE, ForwardBE;
 
     // ---------------------------------------------------------------
     // Fetch stage
     // ---------------------------------------------------------------
     reg  [(REGISTER_WIDTH - 1):0] PC;
-    wire [(REGISTER_WIDTH - 1):0] PCPlus4F, PCNextF;
+    wire [(REGISTER_WIDTH - 1):0] PCPlus4F;
+    wire [(REGISTER_WIDTH - 1):0] PCNextF;
 
     // ---------------------------------------------------------------
     // Decode stage
@@ -73,18 +77,26 @@ module CustomCore#(
     // ---------------------------------------------------------------
     // Memory stage
     // ---------------------------------------------------------------
-    wire [(REGISTER_WIDTH - 1):0] PCPlus4M, AluResultM, WriteDataM, ReadDataM;
+    wire [(REGISTER_WIDTH - 1):0] PCPlus4M;
+    wire [(REGISTER_WIDTH - 1):0] AluResultM;
+    wire [(REGISTER_WIDTH - 1):0] WriteDataM;
+    wire [(REGISTER_WIDTH - 1):0] ReadDataM;
     wire [4:0]                    RdM;
-    wire                          RegWriteM, MemWriteM, FinishM;
+    wire                          RegWriteM;
+    wire                          MemWriteM;
+    wire                          FinishM;
     wire [1:0]                    ResultSrcM;
 
     // ---------------------------------------------------------------
     // Write stage
     // ---------------------------------------------------------------
-    wire [(REGISTER_WIDTH - 1):0] PCPlus4W, AluResultW, ReadDataW;
+    wire [(REGISTER_WIDTH - 1):0] PCPlus4W;
+    wire [(REGISTER_WIDTH - 1):0] AluResultW;
+    wire [(REGISTER_WIDTH - 1):0] ReadDataW;
     reg  [(REGISTER_WIDTH - 1):0] ResultW;
     wire [4:0]                    RdW;
-    wire                          RegWriteW, FinishW;
+    wire                          RegWriteW;
+    wire                          FinishW;
     wire [1:0]                    ResultSrcW;
 
 //***************************************************************
@@ -315,7 +327,7 @@ module CustomCore#(
     end
 
     // ---------------------------------------------------------------
-    // Finish: sticky flag once ret reaches write back
+    // Finish indication
     // ---------------------------------------------------------------
     reg finish_r;
     always @(posedge clk) begin
